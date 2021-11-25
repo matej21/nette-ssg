@@ -5,15 +5,19 @@
 	<meta name="viewport" content="width=device-width">
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+	<link rel="stylesheet" href="/style.css"/>
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
-	{include content}
-
-	{block scripts}
-	<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
-	{/block}
+	<div class="main">
+		<div class="content">
+			{include content}
+		</div>
+		<div class="sidebar">
+			Sidebar
+		</div>
+	</div>
 </body>
 </html>
