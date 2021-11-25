@@ -100,6 +100,14 @@ services:
       ADMINER_AUTOLOGIN: 1
       ADMINER_NAME: Contember
 
+
+  website-ssg:
+    image: thecodingmachine/php:8.0-v4-cli
+    volumes:
+      - ./:/src
+    working_dir: /src/website
+    command: php -S 0.0.0.0:8080 -t dist/
+
   website:
     image: thecodingmachine/php:8.0-v4-cli
     environment:
