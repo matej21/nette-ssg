@@ -11,12 +11,14 @@ $container->callMethod(function (
 	$db->query('set search_path to stage_live');
 	$baseUri = new \Nette\Http\UrlScript('http://ssg.localhost/');
 	$outDir = __DIR__ . '/../dist/';
-	$requests = [
-		'Homepage' => [[]],
-		'Category' => [['slug' => 'nette'], ['slug' => 'java-script'], ['slug' => 'graph-ql']],
-		'Article' => [['slug' => 'nette-ssg']],
+	$presenters = [
+		'Homepage',
+		'Category',
+		'Article' ,
 	];
-	foreach ($requests as $presenterName => $requestParams) {
+	foreach ($presenters as $presenterName) {
+		$presenter = $presenterFactory->createPresenter($presenterName);
+		$requestParams = $presenter instanceof \App\Core\SiteGeneratorParametersProvider ? $presenter->getSSGParameters() : [[]];
 		foreach ($requestParams as $params) {
 			$appRequest = new \Nette\Application\Request($presenterName, 'GET', $params);
 			$presenter = $presenterFactory->createPresenter($appRequest->getPresenterName());
@@ -32,7 +34,6 @@ $container->callMethod(function (
 			echo "$pagePath\n";
 			\Nette\Utils\FileSystem::createDir($outDir . $pagePath);
 			file_put_contents($outDir . $pagePath . '/index.html', $html);
-
 		}
 	}
 });
