@@ -17,6 +17,11 @@
 		</div>
 		<div class="sidebar">
 			Sidebar
+			<ul>
+				{foreach $categories as $cat}
+					<li><a n:href="Category: $cat->slug">{$cat->name}</a></li>
+				{/foreach}
+			</ul>
 		</div>
 	</div>
 </body>

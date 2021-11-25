@@ -1,7 +1,5 @@
-{* This is the welcome page, you can delete it *}
-
 {block content}
-<h1>Hello world</h1>
+<h1>{$category->name}</h1>
 {foreach $articles as $article}
     <h2><a n:href="Article: $article->slug">{$article->title}</a></h2>
     <p>{$article->lead}</p>
