@@ -29,10 +29,9 @@ $container->callMethod(function (
 			] + $appRequest->getParameters(), $baseUri);
 			assert($url !== null);
 			$pagePath = substr($url, strlen($baseUri->getBaseUrl()));
-			dump($pagePath); // :-( contains ?slug=xxx
-			echo($html);
-
-//			file_put_contents($outDir . $pagePath . '/index.html', $html);
+			echo "$pagePath\n";
+			\Nette\Utils\FileSystem::createDir($outDir . $pagePath);
+			file_put_contents($outDir . $pagePath . '/index.html', $html);
 
 		}
 	}
