@@ -34,7 +34,10 @@ final class HomepagePresenter extends BasePresenter implements SiteGeneratorPara
 	{
 		$paginator = $this->createPaginator();
 		$paginator->setItemCount($this->getArticles()->count('*'));
-		return array_map(fn (int $page) => ['page' => $page === 1 ? null : $page], range(1, $paginator->lastPage));
+		for ($page = 1; $page <= $paginator->lastPage; $page++) {
+			yield ['page' => $page === 1 ? null : $page];
+			yield ['page' => $page === 1 ? null : $page, 'ajax' => true];
+		}
 	}
 
 	/**

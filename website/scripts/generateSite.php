@@ -23,17 +23,25 @@ $container->callMethod(function (
 			$appRequest = new \Nette\Application\Request($presenterName, 'GET', $params);
 			$presenter = $presenterFactory->createPresenter($appRequest->getPresenterName());
 			$presenter->autoCanonicalize = false; // it returns a redirect otherwise
-			$response = $presenter->run($appRequest);
-			assert($response instanceof \Nette\Application\Responses\TextResponse);
-			$html = (string) $response->getSource();
 			$url = $router->constructUrl([
 				'presenter' => $appRequest->getPresenterName(),
 			] + $appRequest->getParameters(), $baseUri);
 			assert($url !== null);
 			$pagePath = substr($url, strlen($baseUri->getBaseUrl()));
+
+			$response = $presenter->run($appRequest);
+			if ($response instanceof \Nette\Application\Responses\TextResponse) {
+				$content = (string) $response->getSource();
+				$pagePath .= '/index.html';
+			} else if ($response instanceof \Nette\Application\Responses\JsonResponse) {
+				$content = json_encode($response->getPayload());
+			} else {
+				throw new \LogicException(get_class($response));
+			}
+
 			echo "$pagePath\n";
-			\Nette\Utils\FileSystem::createDir($outDir . $pagePath);
-			file_put_contents($outDir . $pagePath . '/index.html', $html);
+			\Nette\Utils\FileSystem::createDir(dirname($outDir . $pagePath));
+			file_put_contents($outDir . $pagePath , $content);
 		}
 	}
 });
