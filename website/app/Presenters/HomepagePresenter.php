@@ -19,6 +19,7 @@ final class HomepagePresenter extends BasePresenter implements SiteGeneratorPara
 		$paginator->setItemCount($articles->count('*'));
 		$this->template->articles = $articles
 			->limit($paginator->length, $paginator->offset);
+		$this->redrawControl();
 	}
 
 	protected function getArticles(): Nette\Database\Table\Selection

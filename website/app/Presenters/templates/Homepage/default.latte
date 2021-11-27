@@ -2,10 +2,14 @@
 
 {block content}
 <h1>Hello world</h1>
-{foreach $articles as $article}
-    <h2><a n:href="Article: $article->slug">{$article->title}</a></h2>
-    <p>{$article->lead}</p>
-{/foreach}
-{if !$paginator->isLast()}
-    <a n:href="this page => $paginator->page + 1">Next page</a>
-{/if}
+<div n:snippet="articles">
+    {foreach $articles as $article}
+        <h2><a n:href="Article: $article->slug">{$article->title}</a></h2>
+        <p>{$article->lead}</p>
+    {/foreach}
+</div>
+<div n:snippet="paginator">
+    {if !$paginator->isLast()}
+        <a class="ajax" n:href="this page => $paginator->page + 1">Next page</a>
+    {/if}
+</div>

@@ -6,6 +6,31 @@
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 	<link rel="stylesheet" href="/style.css"/>
+	<script>
+		document.addEventListener('click', (e) => {
+			if (!e.target.matches('a.ajax')) {
+				return
+			}
+			e.preventDefault()
+			fetch(e.target.href, {
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+				}
+			}).then(it => {
+				window.history.pushState({}, document.title, e.target.href)
+				return it.json()
+			})
+			.then(it => {
+				for (let id in it.snippets) {
+					const target = document.getElementById(id)
+					if (!target) {
+						continue
+					}
+					target.innerHTML = it.snippets[id]
+				}
+			})
+		})
+	</script>
 </head>
 
 <body>
