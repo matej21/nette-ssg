@@ -23,4 +23,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		parent::beforeRender();
 		$this->template->categories = $this->db->table('category');
 	}
+
+	public function isAjax(): bool
+	{
+		return parent::isAjax() || $this->getParameter('ajax');
+	}
 }

@@ -12,11 +12,7 @@
 				return
 			}
 			e.preventDefault()
-			fetch(e.target.href, {
-				headers: {
-					'X-Requested-With': 'XMLHttpRequest',
-				}
-			}).then(it => {
+			fetch(e.target.href + '/index.json').then(it => {
 				window.history.pushState({}, document.title, e.target.href)
 				return it.json()
 			})
