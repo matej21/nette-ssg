@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Core\SiteGeneratorParametersProvider;
 use Nette;
 
 
-final class HomepagePresenter extends BasePresenter
+final class HomepagePresenter extends BasePresenter implements SiteGeneratorParametersProvider
 {
 	public function renderDefault(int $page = 1)
 	{
@@ -26,6 +27,13 @@ final class HomepagePresenter extends BasePresenter
 			->where('published_at <= ?', new \DateTimeImmutable())
 			->order('published_at DESC');
 		return $articles;
+	}
+
+	public function getSSGParameters(): iterable
+	{
+		$paginator = $this->createPaginator();
+		$paginator->setItemCount($this->getArticles()->count('*'));
+		return array_map(fn (int $page) => ['page' => $page === 1 ? null : $page], range(1, $paginator->lastPage));
 	}
 
 	/**
