@@ -6,3 +6,6 @@
     <h2><a n:href="Article: $article->slug">{$article->title}</a></h2>
     <p>{$article->lead}</p>
 {/foreach}
+{if !$paginator->isLast()}
+    <a n:href="this page => $paginator->page + 1">Next page</a>
+{/if}

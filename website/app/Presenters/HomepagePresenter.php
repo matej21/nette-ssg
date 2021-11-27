@@ -9,11 +9,32 @@ use Nette;
 
 final class HomepagePresenter extends BasePresenter
 {
-	public function renderDefault()
+	public function renderDefault(int $page = 1)
 	{
-		$this->template->articles = $this->db->table('article')
+		$paginator = $this->createPaginator();
+		$paginator->setPage($page);
+		$this->template->paginator = $paginator;
+		$articles = $this->getArticles();
+		$paginator->setItemCount($articles->count('*'));
+		$this->template->articles = $articles
+			->limit($paginator->length, $paginator->offset);
+	}
+
+	protected function getArticles(): Nette\Database\Table\Selection
+	{
+		$articles = $this->db->table('article')
 			->where('published_at <= ?', new \DateTimeImmutable())
-			->order('published_at DESC')
-			->fetchAll();
+			->order('published_at DESC');
+		return $articles;
+	}
+
+	/**
+	 * @return Nette\Utils\Paginator
+	 */
+	protected function createPaginator(): Nette\Utils\Paginator
+	{
+		$paginator = new Nette\Utils\Paginator();
+		$paginator->setItemsPerPage(20);
+		return $paginator;
 	}
 }
